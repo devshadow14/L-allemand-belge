@@ -2,648 +2,166 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
-<title>L'Allemand Belge 🎉</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#090b14">
+<title>MICHEAL SCOFIELD RÉACTIONS</title>
 <style>
-  :root{
-    --bg-deep:#170F2B;
-    --bg-mid:#2A1B47;
-    --card:rgba(255,255,255,0.05);
-    --card-border:rgba(255,255,255,0.10);
-    --gold:#F5B942;
-    --gold-soft:#F7D488;
-    --berry:#E8527A;
-    --text:#F3EAFB;
-    --muted:#B9A8D9;
-    --success:#5FCE9A;
-  }
-  *{box-sizing:border-box;margin:0;padding:0;}
-  html,body{height:100%;}
-  body{
-    font-family:'Inter',sans-serif;
-    background:
-      radial-gradient(ellipse 90% 60% at 50% -10%, rgba(232,82,122,0.25), transparent 60%),
-      radial-gradient(ellipse 70% 50% at 85% 15%, rgba(245,185,66,0.15), transparent 60%),
-      linear-gradient(180deg, var(--bg-deep), var(--bg-mid) 60%, var(--bg-deep));
-    color:var(--text);
-    min-height:100%;
-    overflow-x:hidden;
-    position:relative;
-  }
-  h1,h2,h3,.display{font-family:'Fraunces',serif;}
-  a{color:inherit;}
-  button{font-family:inherit;cursor:pointer;}
-  ::selection{background:var(--gold);color:#231A3A;}
-
-  /* ---------- floating decorations ---------- */
-  #decor{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
-  .balloon{
-    position:absolute; bottom:-140px; font-size:38px; opacity:0.85;
-    animation:rise linear infinite;
-    filter:drop-shadow(0 6px 10px rgba(0,0,0,0.35));
-  }
-  @keyframes rise{
-    0%{transform:translateY(0) translateX(0) rotate(0deg);}
-    50%{transform:translateY(-55vh) translateX(18px) rotate(6deg);}
-    100%{transform:translateY(-115vh) translateX(-14px) rotate(-6deg);}
-  }
-  .spark{
-    position:absolute; width:6px; height:6px; border-radius:50%;
-    background:var(--gold-soft); opacity:0.7;
-    animation:twinkle 3.2s ease-in-out infinite;
-  }
-  @keyframes twinkle{0%,100%{opacity:.15;transform:scale(.7);}50%{opacity:.9;transform:scale(1.3);}}
-
-  #confetti-canvas{position:fixed;inset:0;pointer-events:none;z-index:9999;}
-
-  /* ---------- layout shell ---------- */
-  #app{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column;}
-  .page{display:none;flex:1;padding:28px 20px 110px;max-width:520px;margin:0 auto;width:100%;animation:fadeIn .45s ease both;}
-  .page.active{display:block;}
-  @keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
-
-  .eyebrow{color:var(--gold-soft);font-size:13px;letter-spacing:.02em;margin-bottom:6px;}
-  .card{
-    background:var(--card); border:1px solid var(--card-border);
-    border-radius:20px; padding:22px; backdrop-filter:blur(14px);
-  }
-  .stack{display:flex;flex-direction:column;gap:16px;}
-
-  input, textarea{
-    width:100%; padding:13px 14px; border-radius:12px;
-    background:rgba(255,255,255,0.06); border:1px solid var(--card-border);
-    color:var(--text); font-size:15px; outline:none; transition:border-color .2s;
-  }
-  input::placeholder, textarea::placeholder{color:var(--muted);}
-  input:focus, textarea:focus{border-color:var(--gold);}
-  textarea{resize:vertical;min-height:90px;font-family:inherit;}
-
-  .btn{
-    display:inline-flex;align-items:center;justify-content:center;gap:8px;
-    padding:13px 20px;border-radius:12px;border:none;font-weight:600;font-size:15px;
-    transition:transform .15s ease, box-shadow .15s ease;
-  }
-  .btn:active{transform:scale(.97);}
-  .btn-primary{background:linear-gradient(135deg,var(--gold),#E8A427);color:#241A0A;box-shadow:0 8px 20px rgba(245,185,66,.25);}
-  .btn-primary:hover{box-shadow:0 10px 26px rgba(245,185,66,.4);}
-  .btn-ghost{background:transparent;border:1px solid var(--card-border);color:var(--text);}
-  .btn-berry{background:linear-gradient(135deg,var(--berry),#C33A5F);color:#fff;box-shadow:0 8px 20px rgba(232,82,122,.3);}
-  .btn-block{width:100%;}
-  .btn-sm{padding:8px 14px;font-size:13px;border-radius:10px;}
-
-  .err{color:var(--berry);font-size:13px;min-height:18px;}
-  .ok{color:var(--success);font-size:13px;min-height:18px;}
-
-  /* ---------- auth ---------- */
-  #auth-screen{position:relative;z-index:1;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;}
-  .auth-card{max-width:400px;width:100%;}
-  .auth-photo{
-    width:100%;aspect-ratio:4/3;border-radius:18px;overflow:hidden;margin-bottom:18px;
-    border:1px solid var(--card-border);position:relative;
-  }
-  .auth-photo img{width:100%;height:100%;object-fit:cover;display:block;}
-  .auth-photo::after{
-    content:'';position:absolute;inset:0;
-    background:linear-gradient(180deg,transparent 55%, rgba(23,15,43,.85));
-  }
-  .tabs{display:flex;background:rgba(255,255,255,.05);border-radius:12px;padding:4px;margin-bottom:18px;}
-  .tab{flex:1;text-align:center;padding:10px;border-radius:9px;border:none;background:transparent;color:var(--muted);font-weight:600;font-size:14px;}
-  .tab.active{background:var(--gold);color:#241A0A;}
-
-  /* ---------- top bar ---------- */
-  .topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;}
-  .brand{font-size:14px;color:var(--muted);letter-spacing:.02em;}
-
-  /* ---------- hero (accueil) ---------- */
-  .hero-photo{
-    width:100%;aspect-ratio:1/1;border-radius:24px;overflow:hidden;margin:16px 0 20px;
-    border:2px solid var(--card-border); box-shadow:0 20px 50px rgba(0,0,0,.35);
-    position:relative;
-  }
-  .hero-photo img{width:100%;height:100%;object-fit:cover;display:block;}
-  .hero-photo .ring{position:absolute;inset:-2px;border-radius:24px;border:2px solid var(--gold);opacity:.5;pointer-events:none;}
-  .site-title{font-size:34px;font-weight:900;line-height:1.08;margin-bottom:6px;}
-  .site-sub{color:var(--muted);font-size:15px;margin-bottom:20px;}
-
-  .countdown{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:20px 0;}
-  .cd-box{background:var(--card);border:1px solid var(--card-border);border-radius:14px;padding:12px 4px;text-align:center;}
-  .cd-num{font-family:'Fraunces',serif;font-size:24px;font-weight:700;color:var(--gold-soft);}
-  .cd-label{font-size:11px;color:var(--muted);margin-top:2px;text-transform:uppercase;letter-spacing:.05em;}
-
-  .gift-btn-wrap{position:sticky;bottom:96px;display:flex;justify-content:center;margin-top:24px;z-index:5;}
-  .gift-btn{
-    display:flex;align-items:center;gap:10px;padding:15px 26px;border-radius:999px;
-    background:linear-gradient(135deg,var(--berry),#B93A5C); color:#fff; font-weight:700; font-size:15px;
-    box-shadow:0 12px 30px rgba(232,82,122,.4); border:none;
-    animation:pulse 2.4s ease-in-out infinite;
-  }
-  @keyframes pulse{0%,100%{box-shadow:0 12px 30px rgba(232,82,122,.4);}50%{box-shadow:0 14px 38px rgba(232,82,122,.65);}}
-
-  /* modal */
-  .modal-overlay{position:fixed;inset:0;background:rgba(10,6,20,.75);backdrop-filter:blur(4px);display:none;align-items:flex-end;justify-content:center;z-index:200;}
-  .modal-overlay.active{display:flex;}
-  .modal{width:100%;max-width:480px;background:var(--bg-mid);border:1px solid var(--card-border);border-radius:24px 24px 0 0;padding:24px 20px 28px;animation:slideUp .3s ease;}
-  @media(min-width:540px){.modal-overlay{align-items:center;}.modal{border-radius:22px;}}
-  @keyframes slideUp{from{transform:translateY(40px);opacity:0;}to{transform:translateY(0);opacity:1;}}
-  .modal-close{float:right;background:none;border:none;color:var(--muted);font-size:20px;}
-  .pay-box{background:rgba(255,255,255,.06);border:1px dashed var(--gold);border-radius:14px;padding:16px;margin-top:14px;text-align:center;}
-  .pay-num{font-family:'Fraunces',serif;font-size:22px;font-weight:700;color:var(--gold-soft);letter-spacing:.02em;margin:6px 0;}
-
-  /* ---------- anniv page ---------- */
-  .section-title{font-size:22px;font-weight:700;margin-bottom:4px;}
-  .wish-form{margin:18px 0;}
-  .wish{
-    background:var(--card);border:1px solid var(--card-border);border-radius:16px;
-    padding:14px 16px;margin-bottom:10px;
-  }
-  .wish-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
-  .wish-name{font-weight:700;color:var(--gold-soft);font-size:14px;}
-  .wish-date{font-size:11px;color:var(--muted);}
-  .wish-text{font-size:14.5px;line-height:1.5;color:var(--text);}
-  .empty-note{color:var(--muted);font-size:14px;text-align:center;padding:30px 10px;}
-
-  /* ---------- admin ---------- */
-  .lock-wrap{display:flex;flex-direction:column;align-items:center;text-align:center;padding:40px 10px;gap:14px;}
-  .lock-icon{font-size:40px;}
-  .admin-stat{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--card-border);}
-  .admin-stat:last-child{border-bottom:none;}
-  .user-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--card-border);font-size:14px;}
-  .user-row:last-child{border-bottom:none;}
-  .tag{font-size:11px;padding:3px 8px;border-radius:999px;background:rgba(245,185,66,.18);color:var(--gold-soft);}
-
-  /* ---------- compte ---------- */
-  .avatar{
-    width:74px;height:74px;border-radius:50%;
-    background:linear-gradient(135deg,var(--gold),var(--berry));
-    display:flex;align-items:center;justify-content:center;
-    font-family:'Fraunces',serif;font-size:28px;font-weight:700;color:#241A0A;
-    margin-bottom:12px;
-  }
-
-  /* ---------- bottom nav ---------- */
-  #nav{
-    position:fixed;bottom:0;left:0;right:0;z-index:100;
-    display:flex;justify-content:center;padding:14px 16px calc(14px + env(safe-area-inset-bottom));
-  }
-  .nav-inner{
-    display:flex;gap:4px;background:rgba(23,15,43,.85);backdrop-filter:blur(18px);
-    border:1px solid var(--card-border);border-radius:20px;padding:8px;max-width:480px;width:100%;
-    box-shadow:0 12px 30px rgba(0,0,0,.4);
-  }
-  .nav-btn{
-    flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;
-    background:none;border:none;color:var(--muted);padding:8px 4px;border-radius:14px;font-size:11px;font-weight:600;
-    transition:background .2s,color .2s;
-  }
-  .nav-btn .ic{font-size:19px;}
-  .nav-btn.active{color:#241A0A;background:linear-gradient(135deg,var(--gold),var(--gold-soft));}
-
-  .toast{
-    position:fixed;top:20px;left:50%;transform:translateX(-50%) translateY(-20px);
-    background:var(--bg-mid);border:1px solid var(--card-border);color:var(--text);
-    padding:12px 20px;border-radius:12px;font-size:14px;z-index:999;opacity:0;
-    transition:all .3s ease;box-shadow:0 10px 30px rgba(0,0,0,.4);
-  }
-  .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#070910;--card:#101522;--card2:#151b2b;--text:#f7f8ff;--muted:#8f98ad;--primary:#ff315d;--secondary:#7c4dff;--line:#242b3d;--ok:#22c55e}
+body{font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;background:radial-gradient(circle at 20% 0%,#24102a 0,#070910 38%),var(--bg);color:var(--text);min-height:100vh}
+button,input{font:inherit}button{cursor:pointer;border:0}
+.hidden{display:none!important}.app{min-height:100vh}.screen{min-height:100vh}
+.auth{display:flex;align-items:center;justify-content:center;padding:25px}
+.auth-box{width:min(440px,100%);background:rgba(16,21,34,.9);border:1px solid var(--line);border-radius:28px;padding:30px;box-shadow:0 25px 80px #0008;backdrop-filter:blur(18px)}
+.logo{text-align:center;margin-bottom:25px}.logo-icon{width:65px;height:65px;border-radius:20px;margin:auto auto 12px;display:grid;place-items:center;background:linear-gradient(135deg,var(--primary),var(--secondary));font-size:30px;box-shadow:0 10px 35px #ff315d44}
+.logo h1{font-size:22px;letter-spacing:.4px}.logo p{color:var(--muted);font-size:12px;margin-top:5px}
+.tabs{display:flex;background:#090d16;border-radius:14px;padding:4px;margin-bottom:22px}.tabs button{flex:1;background:transparent;color:var(--muted);padding:11px;border-radius:11px}.tabs button.active{background:var(--card2);color:#fff}
+.field{margin:13px 0}.field label{display:block;color:#b8c0d3;font-size:13px;margin-bottom:7px}.field input{width:100%;background:#0a0e18;border:1px solid var(--line);color:#fff;border-radius:13px;padding:13px;outline:none}.field input:focus{border-color:var(--primary)}
+.primary{width:100%;padding:14px;border-radius:14px;color:#fff;font-weight:800;background:linear-gradient(135deg,var(--primary),var(--secondary));box-shadow:0 10px 28px #7c4dff33}.secondary{padding:11px 14px;border-radius:12px;background:#202638;color:#fff}.danger{background:#3a1823;color:#ff7e99}
+.msg{font-size:13px;margin:12px 0;color:#ff829c}.success{color:#55e58a}
+.shell{display:flex;min-height:100vh}.sidebar{width:240px;background:#0b0f18;border-right:1px solid var(--line);padding:22px 14px;position:fixed;top:0;bottom:0}.brand{font-weight:900;font-size:16px;padding:10px 12px 25px}.brand span{color:var(--primary)}.nav button{width:100%;text-align:left;padding:13px 14px;margin:3px 0;border-radius:12px;background:transparent;color:var(--muted)}.nav button.active,.nav button:hover{background:#191f2e;color:#fff}.main{margin-left:240px;width:calc(100% - 240px);padding:25px;max-width:1400px}.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:25px}.top h2{font-size:25px}.userpill{display:flex;align-items:center;gap:9px;color:#cbd2e1}.avatar{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,var(--primary),var(--secondary));font-weight:800}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.stat,.card{background:linear-gradient(180deg,#121827,#0e131f);border:1px solid var(--line);border-radius:18px;padding:19px}.stat small{color:var(--muted)}.stat strong{display:block;font-size:26px;margin-top:8px}.section{margin-top:18px}.section-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.section-head h3{font-size:17px}.list{display:grid;gap:11px}.channel{display:flex;align-items:center;justify-content:space-between;gap:12px;background:#111727;border:1px solid var(--line);padding:15px;border-radius:15px}.channel-info{min-width:0}.channel-info b{display:block}.channel-info span{display:block;color:var(--muted);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:4px}.actions{display:flex;gap:7px}.empty{color:var(--muted);text-align:center;padding:35px;border:1px dashed var(--line);border-radius:16px}
+.page{display:none}.page.active{display:block}.emoji-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:9px;margin:15px 0}.emoji{font-size:25px;padding:12px;background:#0b101c;border:1px solid var(--line);border-radius:13px}.emoji.selected{border-color:var(--primary);background:#2a1521;transform:translateY(-1px)}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:14px}.modal{position:fixed;inset:0;background:#000a;display:none;align-items:center;justify-content:center;padding:20px;z-index:10}.modal.show{display:flex}.modal-box{width:min(480px,100%);background:#101522;border:1px solid var(--line);border-radius:22px;padding:22px}.modal-actions{display:flex;gap:10px;margin-top:18px}.modal-actions button{flex:1}
+.table{width:100%;border-collapse:collapse}.table th,.table td{text-align:left;padding:12px;border-bottom:1px solid var(--line);font-size:13px}.table th{color:var(--muted)}.badge{padding:5px 9px;border-radius:20px;background:#12351f;color:#5bea8b;font-size:11px}
+.mobile-nav{display:none}
+.toast{position:fixed;right:20px;bottom:20px;background:#171d2c;border:1px solid var(--line);padding:13px 17px;border-radius:13px;box-shadow:0 15px 40px #0008;z-index:30}
+@media(max-width:850px){.sidebar{display:none}.main{margin-left:0;width:100%;padding:18px 15px 90px}.grid{grid-template-columns:repeat(2,1fr)}.mobile-nav{position:fixed;display:flex;bottom:0;left:0;right:0;background:#0b0f18ee;border-top:1px solid var(--line);z-index:8;padding:7px;backdrop-filter:blur(15px)}.mobile-nav button{flex:1;background:transparent;color:var(--muted);padding:8px 3px;font-size:11px}.mobile-nav button.active{color:#fff}.mobile-nav i{display:block;font-style:normal;font-size:19px;margin-bottom:3px}.row{grid-template-columns:1fr}.emoji-grid{grid-template-columns:repeat(5,1fr)}.top h2{font-size:20px}}
+@media(max-width:420px){.grid{gap:9px}.stat{padding:14px}.stat strong{font-size:21px}.emoji-grid{grid-template-columns:repeat(4,1fr)}.channel{align-items:flex-start;flex-direction:column}.actions{width:100%}.actions button{flex:1}}
 </style>
 </head>
 <body>
-
-<canvas id="confetti-canvas"></canvas>
-<div id="decor"></div>
-<div class="toast" id="toast"></div>
-
-<!-- ================= AUTH ================= -->
-<div id="auth-screen">
-  <div class="auth-card card">
-    <div class="auth-photo"><img src="https://files.catbox.moe/jqtw3i.jpg" alt=""></div>
-    <div class="eyebrow">Bienvenue sur</div>
-    <h1 style="font-size:26px;margin-bottom:16px;">L'Allemand Belge 🎉</h1>
-
-    <div class="tabs">
-      <button class="tab active" id="tab-login" onclick="switchAuthTab('login')">Connexion</button>
-      <button class="tab" id="tab-signup" onclick="switchAuthTab('signup')">Inscription</button>
-    </div>
-
-    <div id="login-form" class="stack">
-      <input type="text" id="login-username" placeholder="Nom d'utilisateur" autocomplete="username">
-      <input type="password" id="login-password" placeholder="Mot de passe" autocomplete="current-password">
-      <div class="err" id="login-err"></div>
-      <button class="btn btn-primary btn-block" onclick="doLogin()">Se connecter</button>
-    </div>
-
-    <div id="signup-form" class="stack" style="display:none;">
-      <input type="text" id="signup-username" placeholder="Choisis un nom d'utilisateur">
-      <input type="password" id="signup-password" placeholder="Choisis un mot de passe">
-      <div class="err" id="signup-err"></div>
-      <button class="btn btn-primary btn-block" onclick="doSignup()">Créer mon compte</button>
-    </div>
+<div id="authScreen" class="screen auth">
+  <div class="auth-box">
+    <div class="logo"><div class="logo-icon">🌹</div><h1>MICHEAL SCOFIELD RÉACTIONS</h1><p>Gestionnaire de réactions pour vos chaînes</p></div>
+    <div class="tabs"><button id="loginTab" class="active" onclick="showAuth('login')">Connexion</button><button id="registerTab" onclick="showAuth('register')">Inscription</button></div>
+    <form id="authForm" onsubmit="authSubmit(event)">
+      <div id="nameField" class="field hidden"><label>Nom d'utilisateur</label><input id="authName" autocomplete="username"></div>
+      <div class="field"><label>Email</label><input id="authEmail" type="email" required autocomplete="email"></div>
+      <div class="field"><label>Mot de passe</label><input id="authPassword" type="password" required autocomplete="current-password"></div>
+      <div id="confirmField" class="field hidden"><label>Confirmer le mot de passe</label><input id="authConfirm" type="password"></div>
+      <div id="authMsg" class="msg"></div>
+      <button id="authBtn" class="primary">Se connecter</button>
+    </form>
   </div>
-</div>
-
-<!-- ================= APP ================= -->
-<div id="app" style="display:none;">
-
-  <!-- ACCUEIL -->
-  <section class="page" id="page-accueil">
-    <div class="topbar"><span class="brand">🎈 L'Allemand Belge</span></div>
-    <div class="site-title">Joyeux Anniversaire<br><span style="color:var(--gold-soft)">L'Allemand Belge 🇧🇪</span></div>
-    <div class="site-sub">Rendez-vous le 30 septembre pour souffler les bougies 🕯️</div>
-
-    <div class="hero-photo"><div class="ring"></div><img src="https://files.catbox.moe/q7p5uv.jpg" alt=""></div>
-
-    <div class="countdown" id="countdown">
-      <div class="cd-box"><div class="cd-num" id="cd-days">00</div><div class="cd-label">jours</div></div>
-      <div class="cd-box"><div class="cd-num" id="cd-hours">00</div><div class="cd-label">heures</div></div>
-      <div class="cd-box"><div class="cd-num" id="cd-min">00</div><div class="cd-label">minutes</div></div>
-      <div class="cd-box"><div class="cd-num" id="cd-sec">00</div><div class="cd-label">secondes</div></div>
-    </div>
-
-    <div class="card">
-      <div class="section-title">🎁 Envie de faire plaisir ?</div>
-      <div style="color:var(--muted);font-size:14px;margin-top:6px;">Un petit cadeau fait toujours plaisir. Clique ci-dessous pour envoyer une contribution sur Wave.</div>
-    </div>
-  </section>
-
-  <!-- ANNIV -->
-  <section class="page" id="page-anniv">
-    <div class="topbar"><span class="brand">🎂 Le jour J</span></div>
-    <div class="section-title">Mur des messages</div>
-    <div style="color:var(--muted);font-size:14px;margin-bottom:14px;">Tous les messages d'anniversaire laissés par les invités.</div>
-
-    <div class="card wish-form">
-      <textarea id="anniv-wish-text" placeholder="Écris ton petit mot d'anniversaire ici..."></textarea>
-      <div class="err" id="anniv-wish-err"></div>
-      <button class="btn btn-primary btn-block" style="margin-top:10px;" onclick="submitWish('anniv-wish-text','anniv-wish-err')">Envoyer mon message 💌</button>
-    </div>
-
-    <div id="wishes-list"></div>
-  </section>
-
-  <!-- ADMIN -->
-  <section class="page" id="page-admin">
-    <div class="topbar"><span class="brand">🛡️ Zone Admin</span></div>
-
-    <div id="admin-locked" class="card lock-wrap">
-      <div class="lock-icon">🔒</div>
-      <div class="section-title">Accès protégé</div>
-      <div style="color:var(--muted);font-size:14px;">Entre le code admin pour gérer la sécurité du site.</div>
-      <input type="password" id="admin-code" placeholder="Code admin" style="margin-top:8px;">
-      <div class="err" id="admin-code-err"></div>
-      <button class="btn btn-primary btn-block" onclick="unlockAdmin()">Déverrouiller</button>
-    </div>
-
-    <div id="admin-panel" class="stack" style="display:none;">
-      <div class="card">
-        <div class="section-title" style="margin-bottom:10px;">Aperçu</div>
-        <div class="admin-stat"><span style="color:var(--muted);">Comptes inscrits</span><span id="stat-users">0</span></div>
-        <div class="admin-stat"><span style="color:var(--muted);">Messages reçus</span><span id="stat-wishes">0</span></div>
-      </div>
-
-      <div class="card">
-        <div class="section-title" style="margin-bottom:6px;">Comptes inscrits</div>
-        <div id="admin-users-list"></div>
-      </div>
-
-      <div class="card">
-        <div class="section-title" style="margin-bottom:6px;">Tous les messages</div>
-        <div id="admin-wishes-list"></div>
-      </div>
-
-      <button class="btn btn-ghost btn-block" onclick="lockAdmin()">🔒 Reverrouiller</button>
-    </div>
-  </section>
-
-  <!-- COMPTE -->
-  <section class="page" id="page-compte">
-    <div class="topbar"><span class="brand">👤 Mon compte</span></div>
-
-    <div class="card">
-      <div class="avatar" id="account-avatar">?</div>
-      <div style="font-size:19px;font-weight:700;" id="account-username">—</div>
-      <div style="color:var(--muted);font-size:13px;margin-top:2px;" id="account-role">Invité</div>
-    </div>
-
-    <div class="card" style="margin-top:16px;">
-      <div class="section-title" style="margin-bottom:10px;">Écrire un texte d'anniversaire</div>
-      <textarea id="compte-wish-text" placeholder="Ton message pour L'Allemand Belge..."></textarea>
-      <div class="err" id="compte-wish-err"></div>
-      <div class="ok" id="compte-wish-ok"></div>
-      <button class="btn btn-primary btn-block" style="margin-top:10px;" onclick="submitWish('compte-wish-text','compte-wish-err','compte-wish-ok')">Envoyer à l'admin 📩</button>
-    </div>
-
-    <button class="btn btn-ghost btn-block" style="margin-top:16px;" onclick="logout()">Se déconnecter</button>
-  </section>
-
-  <!-- BOTTOM NAV -->
-  <nav id="nav">
-    <div class="nav-inner">
-      <button class="nav-btn active" data-page="accueil" onclick="goTo('accueil')"><span class="ic">🏠</span>Accueil</button>
-      <button class="nav-btn" data-page="anniv" onclick="goTo('anniv')"><span class="ic">🎂</span>Anniv</button>
-      <button class="nav-btn" data-page="admin" onclick="goTo('admin')"><span class="ic">🛡️</span>Admin</button>
-      <button class="nav-btn" data-page="compte" onclick="goTo('compte')"><span class="ic">👤</span>Compte</button>
-    </div>
-  </nav>
-</div>
-
-<!-- GIFT MODAL -->
-<div class="modal-overlay" id="gift-modal">
-  <div class="modal">
-    <button class="modal-close" onclick="closeGift()">✕</button>
-    <div class="section-title">Envoyer un cadeau 🎁</div>
-    <div style="color:var(--muted);font-size:14px;margin:6px 0 16px;">Indique le montant que tu veux envoyer.</div>
-    <input type="number" id="gift-amount" placeholder="Montant (FCFA)" inputmode="numeric">
-    <div class="pay-box">
-      <div style="color:var(--muted);font-size:13px;">Envoie sur Wave au</div>
-      <div class="pay-num">+225 05 56 36 81 37</div>
-      <button class="btn btn-ghost btn-sm" onclick="copyNumber()">📋 Copier le numéro</button>
-    </div>
-    <button class="btn btn-berry btn-block" style="margin-top:16px;" onclick="confirmGift()">J'ai envoyé mon cadeau 🎉</button>
+</div=">
+<div class="shell">
+<aside class="sidebar">
+  <div class="brand">🌹 MICHEAL <span>SCOFIELD</span></div>
+  <div class="nav">
+    <button data-page="home" onclick="go('home')">🏠 Accueil</button>
+    <button data-page="channels" onclick="go('channels')">🔗 Mes chaînes</button>
+    <button data-page="reactions" onclick="go('reactions')">😍 Réactions</button>
+    <button data-page="history" onclick="go('history')">📊 Historique</button>
+    <button data-page="account" onclick="go('account')">👤 Compte</button>
   </div>
+</aside>
+<main class="main">
+  <div class="top"><h2 id="pageTitle">Accueil</h2><div class="userpill"><div class="avatar" id="avatar">M</div><span id="topName">Utilisateur</span></div></div>
+
+  <section id="home" class="page active">
+    <div class="grid">
+      <div class="stat"><small>Chaînes</small><strong id="sChannels">0</strong></div>
+      <div class="stat"><small>Réactions traitées</small><strong id="sReactions">0</strong></div>
+      <div class="stat"><small>Aujourd'hui</small><strong id="sToday">0</strong></div>
+      <div class="stat"><small>Service</small><strong class="success">Actif</strong></div>
+    </div>
+    <div class="section card">
+      <div class="section-head"><h3>Bienvenue 👋</h3><button class="primary" style="width:auto" onclick="go('channels')">+ Ajouter une chaîne</button></div>
+      <p style="color:var(--muted);line-height:1.6">Configurez vos chaînes, choisissez vos emojis et préparez vos campagnes de réactions depuis une seule interface.</p>
+    </div>
+    <div class="section card"><div class="section-head"><h3>Dernières activités</h3></div><div id="homeHistory"></div></div>
+  </section>
+
+  <section id="channels" class="page">
+    <div class="card"><div class="section-head"><h3>Mes chaînes Telegram</h3><button class="secondary" onclick="openChannel()">＋ Ajouter</button></div><div id="channelList" class="list"></div></div>
+  </section>
+
+  <section id="reactions" class="page">
+    <div class="card">
+      <div class="section-head"><h3>Configurer les réactions</h3></div>
+      <div class="field"><label>Chaîne</label><select id="reactionChannel" style="width:100%;background:#0a0e18;color:#fff;border:1px solid var(--line);border-radius:13px;padding:13px"></select></div>
+      <label style="color:#b8c0d3;font-size:13px">Choisissez les emojis</label>
+      <div id="emojiGrid" class="emoji-grid"></div>
+      <div class="row">
+        <button class="secondary" onclick="selectAll()">Tout sélectionner</button>
+        <button class="secondary" onclick="clearEmojis()">Tout désélectionner</button>
+      </div>
+      <button class="primary" style="margin-top:15px" onclick="sendReactions()">🚀 ENVOYER LES RÉACTIONS</button>
+      <p style="color:var(--muted);font-size:12px;margin-top:12px">Mode démonstration : aucun appel Telegram réel n'est effectué sans backend/API configuré.</p>
+    </div>
+  </section>
+
+  <section id="history" class="page"><div class="card"><div class="section-head"><h3>Historique</h3></div><div id="historyList"></div></div></section>
+
+  <section id="account" class="page">
+    <div class="card">
+      <div style="display:flex;align-items:center;gap:14px;margin-bottom:20px"><div class="avatar" style="width:60px;height:60px" id="bigAvatar">M</div><div><h3 id="accountName">Utilisateur</h3><p id="accountEmail" style="color:var(--muted)"></p></div></div>
+      <div class="field"><label>Nom d'utilisateur</label><input id="profileName"></div>
+      <div class="field"><label>Email</label><input id="profileEmail" type="email"></div>
+      <button class="primary" onclick="saveProfile()">Enregistrer</button>
+      <button class="secondary" style="width:100%;margin-top:10px" onclick="toggleTheme()">🌙 Changer l'apparence</button>
+      <button class="secondary danger" style="width:100%;margin-top:10px" onclick="logout()">Déconnexion</button>
+      <p style="color:var(--muted);font-size:11px;margin-top:18px">Créé par DEV MICHAEL SCOFIELD</p>
+    </div>
+  </section>
+</main>
 </div>
+<nav class="mobile-nav">
+<button data-page="home" onclick="go('home')"><i>🏠</i>Accueil</button>
+<button data-page="channels" onclick="go('channels')"><i>🔗</i>Chaînes</button>
+<button data-page="reactions" onclick="go('reactions')"><i>😍</i>Réactions</button>
+<button data-page="history" onclick="go('history')"><i>📊</i>Historique</button>
+<button data-page="account" onclick="go('account')"><i>👤</i>Compte</button>
+</nav>
+</div>
+
+<div id="channelModal" class="modal">
+<div class="modal-box"><h3>Ajouter une chaîne</h3>
+<div class="field"><label>Nom de la chaîne</label><input id="cName" placeholder="Ma chaîne"></div>
+<div class="field"><label>Lien Telegram</label><input id="cLink" placeholder="https://t.me/ma_chaine"></div>
+<div class="field"><label>Identifiant (optionnel)</label><input id="cId" placeholder="@ma_chaine"></div>
+<div id="channelMsg" class="msg"></div>
+<div class="modal-actions"><button class="secondary" onclick="closeChannel()">Annuler</button><button class="primary" onclick="addChannel()">Ajouter</button></div>
+</div></div>
+<div id="toast" class="toast hidden"></div>
 
 <script>
-/* ============ CONFIG ============ */
-const ADMIN_CODE = "30 septembre 2006";
-const TARGET_DATE = new Date("2026-09-30T00:00:00");
+const KEY='micheal_scofield_reactions_v1';
+let db=JSON.parse(localStorage.getItem(KEY)||'{"users":[],"session":null,"channels":[],"history":[],"theme":"dark"}');
+let authMode='login';
+let emojis=['❤️','😂','😍','🔥','👍','👎','😢','😡','😮','🎉','💯','🥰','🤩','😎','🙏','👏','😘','🤣','🤯','⭐','💔','😱','🤔','😉'];
+let selected=new Set(['❤️','🔥']);
 
-/* ============ STORAGE HELPERS ============ */
-const DB = {
-  users(){ return JSON.parse(localStorage.getItem('bday_users') || '[]'); },
-  saveUsers(u){ localStorage.setItem('bday_users', JSON.stringify(u)); },
-  wishes(){ return JSON.parse(localStorage.getItem('bday_wishes') || '[]'); },
-  saveWishes(w){ localStorage.setItem('bday_wishes', JSON.stringify(w)); },
-  session(){ return localStorage.getItem('bday_session'); },
-  setSession(u){ localStorage.setItem('bday_session', u); },
-  clearSession(){ localStorage.removeItem('bday_session'); }
-};
-
-function toast(msg){
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'), 2200);
-}
-
-/* ============ AUTH ============ */
-function switchAuthTab(which){
-  document.getElementById('tab-login').classList.toggle('active', which==='login');
-  document.getElementById('tab-signup').classList.toggle('active', which==='signup');
-  document.getElementById('login-form').style.display = which==='login' ? 'flex' : 'none';
-  document.getElementById('signup-form').style.display = which==='signup' ? 'flex' : 'none';
-}
-
-function doSignup(){
-  const username = document.getElementById('signup-username').value.trim();
-  const password = document.getElementById('signup-password').value;
-  const errEl = document.getElementById('signup-err');
-  errEl.textContent = '';
-  if(!username || !password){ errEl.textContent = 'Remplis tous les champs.'; return; }
-  if(password.length < 4){ errEl.textContent = 'Mot de passe trop court (4 caractères min).'; return; }
-  let users = DB.users();
-  if(users.find(u => u.username.toLowerCase() === username.toLowerCase())){
-    errEl.textContent = 'Ce nom est déjà pris.'; return;
-  }
-  users.push({ username, password, profileMessage:'' });
-  DB.saveUsers(users);
-  DB.setSession(username);
-  enterApp();
-  burstConfetti();
-  toast('Compte créé, bienvenue ' + username + ' !');
-}
-
-function doLogin(){
-  const username = document.getElementById('login-username').value.trim();
-  const password = document.getElementById('login-password').value;
-  const errEl = document.getElementById('login-err');
-  errEl.textContent = '';
-  const users = DB.users();
-  const found = users.find(u => u.username.toLowerCase() === username.toLowerCase() && u.password === password);
-  if(!found){ errEl.textContent = 'Identifiants incorrects.'; return; }
-  DB.setSession(found.username);
-  enterApp();
-  toast('Content de te revoir, ' + found.username + ' !');
-}
-
-function logout(){
-  DB.clearSession();
-  document.getElementById('app').style.display = 'none';
-  document.getElementById('auth-screen').style.display = 'flex';
-  lockAdmin();
-}
-
-/* ============ NAV ============ */
-function goTo(page){
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.getElementById('page-' + page).classList.add('active');
-  document.querySelectorAll('.nav-btn').forEach(b => b.classList.toggle('active', b.dataset.page === page));
-  if(page === 'anniv') renderWishes();
-  if(page === 'admin') renderAdmin();
-  if(page === 'compte') renderCompte();
-  window.scrollTo(0,0);
-}
-
-/* ============ APP ENTRY ============ */
-function enterApp(){
-  document.getElementById('auth-screen').style.display = 'none';
-  document.getElementById('app').style.display = 'block';
-  goTo('accueil');
-}
-
-/* ============ WISHES (Anniv + Compte share the same pool) ============ */
-function submitWish(textareaId, errId, okId){
-  const text = document.getElementById(textareaId).value.trim();
-  const errEl = document.getElementById(errId);
-  const okEl = okId ? document.getElementById(okId) : null;
-  errEl.textContent = ''; if(okEl) okEl.textContent = '';
-  if(!text){ errEl.textContent = "Écris un petit message avant d'envoyer."; return; }
-  const username = DB.session();
-  let wishes = DB.wishes();
-  wishes.unshift({ username, text, date: new Date().toLocaleDateString('fr-FR', {day:'2-digit',month:'short',year:'numeric'}) });
-  DB.saveWishes(wishes);
-  document.getElementById(textareaId).value = '';
-  if(okEl){ okEl.textContent = 'Message envoyé, merci ! 🎉'; }
-  toast('Message envoyé 💌');
-  renderWishes();
-}
-
-function renderWishes(){
-  const wishes = DB.wishes();
-  const list = document.getElementById('wishes-list');
-  if(wishes.length === 0){
-    list.innerHTML = "<div class=\"empty-note\">Aucun message pour l'instant. Sois le premier à écrire quelque chose de gentil ✨</div>";
-    return;
-  }
-  list.innerHTML = wishes.map(w => `
-    <div class="wish">
-      <div class="wish-head"><span class="wish-name">${escapeHtml(w.username)}</span><span class="wish-date">${w.date}</span></div>
-      <div class="wish-text">${escapeHtml(w.text)}</div>
-    </div>`).join('');
-}
-
-function escapeHtml(str){
-  const d = document.createElement('div');
-  d.textContent = str;
-  return d.innerHTML;
-}
-
-/* ============ ADMIN ============ */
-function unlockAdmin(){
-  const code = document.getElementById('admin-code').value.trim();
-  const errEl = document.getElementById('admin-code-err');
-  if(code !== ADMIN_CODE){ errEl.textContent = 'Code incorrect.'; return; }
-  errEl.textContent = '';
-  document.getElementById('admin-locked').style.display = 'none';
-  document.getElementById('admin-panel').style.display = 'flex';
-  renderAdmin();
-}
-function lockAdmin(){
-  document.getElementById('admin-locked').style.display = 'flex';
-  document.getElementById('admin-panel').style.display = 'none';
-  document.getElementById('admin-code').value = '';
-}
-function renderAdmin(){
-  if(document.getElementById('admin-panel').style.display === 'none') return;
-  const users = DB.users();
-  const wishes = DB.wishes();
-  document.getElementById('stat-users').textContent = users.length;
-  document.getElementById('stat-wishes').textContent = wishes.length;
-
-  document.getElementById('admin-users-list').innerHTML = users.length
-    ? users.map(u => `<div class="user-row"><span>${escapeHtml(u.username)}</span><span class="tag">inscrit</span></div>`).join('')
-    : '<div class="empty-note">Aucun compte inscrit.</div>';
-
-  document.getElementById('admin-wishes-list').innerHTML = wishes.length
-    ? wishes.map(w => `
-        <div class="wish">
-          <div class="wish-head"><span class="wish-name">${escapeHtml(w.username)}</span><span class="wish-date">${w.date}</span></div>
-          <div class="wish-text">${escapeHtml(w.text)}</div>
-        </div>`).join('')
-    : '<div class="empty-note">Aucun message reçu.</div>';
-}
-
-/* ============ COMPTE ============ */
-function renderCompte(){
-  const username = DB.session();
-  document.getElementById('account-username').textContent = username;
-  document.getElementById('account-avatar').textContent = username ? username[0].toUpperCase() : '?';
-  const wishes = DB.wishes().filter(w => w.username === username);
-  document.getElementById('account-role').textContent = wishes.length ? wishes.length + ' message(s) envoyé(s)' : 'Invité(e) de la fête';
-}
-
-/* ============ COUNTDOWN ============ */
-function updateCountdown(){
-  const now = new Date();
-  let diff = TARGET_DATE - now;
-  if(diff < 0) diff = 0;
-  const days = Math.floor(diff / (1000*60*60*24));
-  const hours = Math.floor(diff / (1000*60*60) % 24);
-  const mins = Math.floor(diff / (1000*60) % 60);
-  const secs = Math.floor(diff / 1000 % 60);
-  document.getElementById('cd-days').textContent = String(days).padStart(2,'0');
-  document.getElementById('cd-hours').textContent = String(hours).padStart(2,'0');
-  document.getElementById('cd-min').textContent = String(mins).padStart(2,'0');
-  document.getElementById('cd-sec').textContent = String(secs).padStart(2,'0');
-}
-setInterval(updateCountdown, 1000);
-
-/* ============ GIFT MODAL ============ */
-function openGift(){ document.getElementById('gift-modal').classList.add('active'); }
-function closeGift(){ document.getElementById('gift-modal').classList.remove('active'); }
-function copyNumber(){
-  navigator.clipboard?.writeText('0556368137');
-  toast('Numéro copié 📋');
-}
-function confirmGift(){
-  const amount = document.getElementById('gift-amount').value;
-  if(!amount){ toast('Indique un montant.'); return; }
-  closeGift();
-  burstConfetti();
-  toast('Merci pour ton geste de ' + amount + ' FCFA ! 🎉');
-  document.getElementById('gift-amount').value = '';
-}
-
-/* ============ DECOR: balloons + sparkles ============ */
-function initDecor(){
-  const decor = document.getElementById('decor');
-  const balloonEmojis = ['🎈','🎈','🎈','🎈'];
-  for(let i=0;i<7;i++){
-    const b = document.createElement('div');
-    b.className = 'balloon';
-    b.textContent = balloonEmojis[i % balloonEmojis.length];
-    b.style.left = (Math.random()*94) + '%';
-    b.style.animationDuration = (14 + Math.random()*10) + 's';
-    b.style.animationDelay = (Math.random()*10) + 's';
-    b.style.fontSize = (28 + Math.random()*20) + 'px';
-    decor.appendChild(b);
-  }
-  for(let i=0;i<22;i++){
-    const s = document.createElement('div');
-    s.className = 'spark';
-    s.style.left = (Math.random()*100) + '%';
-    s.style.top = (Math.random()*100) + '%';
-    s.style.animationDelay = (Math.random()*3) + 's';
-    decor.appendChild(s);
-  }
-}
-
-/* ============ CONFETTI BURST ============ */
-function burstConfetti(){
-  const canvas = document.getElementById('confetti-canvas');
-  const ctx = canvas.getContext('2d');
-  canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-  const colors = ['#F5B942','#E8527A','#F7D488','#5FCE9A','#B48CE0'];
-  let pieces = Array.from({length:120}, () => ({
-    x: Math.random()*canvas.width,
-    y: -20 - Math.random()*canvas.height*0.3,
-    r: 4 + Math.random()*5,
-    c: colors[Math.floor(Math.random()*colors.length)],
-    vy: 2 + Math.random()*3,
-    vx: -2 + Math.random()*4,
-    rot: Math.random()*360,
-    vr: -6 + Math.random()*12
-  }));
-  let frames = 0;
-  function frame(){
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-    pieces.forEach(p => {
-      p.x += p.vx; p.y += p.vy; p.rot += p.vr;
-      ctx.save();
-      ctx.translate(p.x,p.y); ctx.rotate(p.rot*Math.PI/180);
-      ctx.fillStyle = p.c;
-      ctx.fillRect(-p.r/2,-p.r/2,p.r,p.r*1.6);
-      ctx.restore();
-    });
-    frames++;
-    if(frames < 150){ requestAnimationFrame(frame); }
-    else{ ctx.clearRect(0,0,canvas.width,canvas.height); }
-  }
-  frame();
-}
-
-/* ============ GIFT BUTTON (injected into Accueil) ============ */
-(function attachGiftButton(){
-  const wrap = document.createElement('div');
-  wrap.className = 'gift-btn-wrap';
-  wrap.innerHTML = '<button class="btn gift-btn" onclick="openGift()">🎁 Envoyer un cadeau</button>';
-  document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('page-accueil').appendChild(wrap);
-  });
-})();
-
-/* ============ INIT ============ */
-document.addEventListener('DOMContentLoaded', () => {
-  initDecor();
-  updateCountdown();
-  const session = DB.session();
-  if(session){ enterApp(); } 
-  window.addEventListener('resize', () => {
-    const c = document.getElementById('confetti-canvas');
-    c.width = window.innerWidth; c.height = window.innerHeight;
-  });
-});
+function save(){localStorage.setItem(KEY,JSON.stringify(db))}
+function current(){return db.users.find(u=>u.email===db.session)}
+function showAuth(mode){authMode=mode;loginTab.classList.toggle('active',mode==='login');registerTab.classList.toggle('active',mode==='register');nameField.classList.toggle('hidden',mode==='login');confirmField.classList.toggle('hidden',mode==='login');authBtn.textContent=mode==='login'?'Se connecter':"Créer mon compte";authMsg.textContent=''}
+function authSubmit(e){e.preventDefault();let email=authEmail.value.trim().toLowerCase(),pass=authPassword.value,name=authName.value.trim(),confirm=authConfirm.value;
+if(authMode==='register'){if(!name)return msg('authMsg','Nom d’utilisateur requis');if(pass.length<6)return msg('authMsg','Mot de passe : 6 caractères minimum');if(pass!==confirm)return msg('authMsg','Les mots de passe ne correspondent pas');if(db.users.some(u=>u.email===email))return msg('authMsg','Ce compte existe déjà');db.users.push({email,pass,name,created:new Date().toISOString()});db.session=email;save();enter()}
+else{let u=db.users.find(x=>x.email===email&&x.pass===pass);if(!u)return msg('authMsg','Email ou mot de passe incorrect');db.session=email;save();enter()}}
+function enter(){authScreen.classList.add('hidden');app.classList.remove('hidden');refresh();go('home')}
+function logout(){db.session=null;save();app.classList.add('hidden');authScreen.classList.remove('hidden');showAuth('login');authForm.reset()}
+function msg(id,t,ok=false){let el=document.getElementById(id);el.textContent=t;el.className='msg '+(ok?'success':'')}
+function go(page){document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));document.getElementById(page).classList.add('active');document.querySelectorAll('[data-page]').forEach(x=>x.classList.toggle('active',x.dataset.page===page));let titles={home:'Accueil',channels:'Mes chaînes',reactions:'Réactions',history:'Historique',account:'Compte'};pageTitle.textContent=titles[page];refresh()}
+function openChannel(){channelModal.classList.add('show');cName.focus()}
+function closeChannel(){channelModal.classList.remove('show');channelMsg.textContent='';cName.value='';cLink.value='';cId.value=''}
+function addChannel(){let name=cName.value.trim(),link=cLink.value.trim(),id=cId.value.trim();if(!name||!link)return msg('channelMsg','Nom et lien obligatoires');if(!/^https?:\\/\\/t\\.me\\//i.test(link))return msg('channelMsg','Utilisez un lien Telegram du type https://t.me/...');db.channels.push({id:Date.now(),email:db.session,name,link,username:id,active:true,created:new Date().toISOString()});save();closeChannel();refresh();toast('Chaîne ajoutée avec succès')}
+function myChannels(){return db.channels.filter(c=>c.email===db.session)}
+function renderChannels(){let a=myChannels();channelList.innerHTML=a.length?a.map(c=>`<div class="channel"><div class="channel-info"><b>${esc(c.name)}</b><span>${esc(c.link)}</span></div><div class="actions"><button class="secondary" onclick="toggleChannel(${c.id})">${c.active?'⏸':'▶️'}</button><button class="secondary danger" onclick="deleteChannel(${c.id})">🗑️</button></div></div>`).join(''):'<div class="empty">Aucune chaîne configurée.<br><br>Ajoutez votre première chaîne pour commencer.</div>'}
+function toggleChannel(id){let c=db.channels.find(x=>x.id===id);c.active=!c.active;save();renderChannels();toast(c.active?'Chaîne activée':'Chaîne désactivée')}
+function deleteChannel(id){if(!confirm('Supprimer cette chaîne ?'))return;db.channels=db.channels.filter(x=>x.id!==id);save();refresh();toast('Chaîne supprimée')}
+function renderEmojis(){emojiGrid.innerHTML=emojis.map(e=>`<button type="button" class="emoji ${selected.has(e)?'selected':''}" onclick="toggleEmoji('${e}')">${e}</button>`).join('')}
+function toggleEmoji(e){selected.has(e)?selected.delete(e):selected.add(e);renderEmojis()}
+function selectAll(){selected=new Set(emojis);renderEmojis()}function clearEmojis(){selected.clear();renderEmojis()}
+function renderSelect(){let a=myChannels();reactionChannel.innerHTML=a.length?a.map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join(''):'<option value="">Aucune chaîne</option>'}
+function sendReactions(){let cid=Number(reactionChannel.value),c=myChannels().find(x=>x.id===cid);if(!c)return toast('Ajoutez d’abord une chaîne');if(!selected.size)return toast('Choisissez au moins un emoji');let count=selected.size;let item={id:Date.now(),email:db.session,channel:c.name,link:c.link,emojis:[...selected],count,status:'Démonstration',date:new Date().toISOString()};db.history.unshift(item);save();refresh();toast('Campagne enregistrée — mode démonstration')}
+function renderHistory(){let a=db.history.filter(x=>x.email===db.session);if(!a.length){historyList.innerHTML='<div class="empty">Aucune activité pour le moment.</div>';homeHistory.innerHTML='<div class="empty">Aucune activité récente.</div>';return}let rows=a.map(x=>`<tr><td>${esc(x.channel)}</td><td>${x.emojis.join(' ')}</td><td>${x.count}</td><td><span class="badge">${esc(x.status)}</span></td><td>${new Date(x.date).toLocaleString('fr-FR')}</td></tr>`).join('');historyList.innerHTML=`<div style="overflow:auto"><table class="table"><thead><tr><th>Chaîne</th><th>Emojis</th><th>Nb.</th><th>Statut</th><th>Date</th></tr></thead><tbody>${rows}</tbody></table></div>`;homeHistory.innerHTML=a.slice(0,4).map(x=>`<div class="channel"><div class="channel-info"><b>${esc(x.channel)}</b><span>${x.emojis.join(' ')} · ${new Date(x.date).toLocaleString('fr-FR')}</span></div><span class="badge">${esc(x.status)}</span></div>`).join('')}
+function refresh(){let u=current();if(!u)return;let ch=myChannels(),h=db.history.filter(x=>x.email===db.session),today=new Date().toDateString();sChannels.textContent=ch.length;sReactions.textContent=h.reduce((n,x)=>n+x.count,0);sToday.textContent=h.filter(x=>new Date(x.date).toDateString()===today).reduce((n,x)=>n+x.count,0);topName.textContent=u.name;avatar.textContent=(u.name[0]||'U').toUpperCase();bigAvatar.textContent=(u.name[0]||'U').toUpperCase();accountName.textContent=u.name;accountEmail.textContent=u.email;profileName.value=u.name;profileEmail.value=u.email;renderChannels();renderEmojis();renderSelect();renderHistory()}
+function saveProfile(){let u=current(),n=profileName.value.trim(),e=profileEmail.value.trim().toLowerCase();if(!n||!e)return toast('Veuillez remplir les champs');if(e!==u.email&&db.users.some(x=>x.email===e))return toast('Cet email est déjà utilisé');u.name=n;u.email=e;db.session=e;save();refresh();toast('Profil enregistré')}
+function toggleTheme(){document.body.classList.toggle('light');toast('Apparence modifiée')}
+function toast(t){let x=document.getElementById('toast');x.textContent=t;x.classList.remove('hidden');clearTimeout(window.tt);window.tt=setTimeout(()=>x.classList.add('hidden'),3000)}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]))}
+if(db.session&&current())enter();else showAuth('login');
 </script>
 </body>
 </html>
